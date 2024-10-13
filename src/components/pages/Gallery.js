@@ -1,12 +1,7 @@
-// src/components/Gallery.js
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Masonry from 'react-masonry-css';
 import { motion } from 'framer-motion';
-
-// Import Lightbox and desired plugins
-import Lightbox from 'yet-another-react-lightbox';
-import { Fullscreen, Zoom } from 'yet-another-react-lightbox/plugins';
-import images from '../data/images';
+import images from '../data/images';  // Assuming you have an images.js file that exports your image data
 
 const breakpointColumnsObj = {
   default: 4,
@@ -16,14 +11,20 @@ const breakpointColumnsObj = {
 };
 
 const Gallery = () => {
-  console.log('Images:', images); // Add this line
+  const [selectedImage, setSelectedImage] = useState(null);  // State for selected image
+  const dialogRef = useRef(null);  // Use a ref for the dialog
 
-  const [index, setIndex] = useState(-1);
+  useEffect(() => {
+    // Show the dialog when an image is selected
+    if (selectedImage) {
+      dialogRef.current.showModal();  // Show the modal
+    }
+  }, [selectedImage]);  // Trigger effect when selectedImage changes
 
-  const slides = images.map((img) => ({
-    src: img.medium,
-    alt: img.alt,
-  }));
+  const handleClose = () => {
+    dialogRef.current.close();  // Close the modal
+    setSelectedImage(null);  // Clear the selected image state
+  };
 
   return (
     <div className="bg-gray-900 min-h-screen p-4">
@@ -35,9 +36,9 @@ const Gallery = () => {
         {images.map((image, idx) => (
           <motion.div
             key={image.id}
-            className="overflow-hidden rounded-lg"
+            className="overflow-hidden rounded-lg mb-4"
             whileHover={{ scale: 1.05 }}
-            onClick={() => setIndex(idx)}
+            onClick={() => setSelectedImage(image)}  // Set the selected image on click
           >
             <img
               src={image.thumbnail}
@@ -48,34 +49,34 @@ const Gallery = () => {
         ))}
       </Masonry>
 
-      {index >= 0 && (
-        <Lightbox
-          slides={slides}
-          open={index >= 0}
-          index={index}
-          close={() => setIndex(-1)}
-          plugins={[Fullscreen, Zoom]}
-          render={{
-            buttonPrev: () => null, // Hide prev button if desired
-            buttonNext: () => null, // Hide next button if desired
-            toolbar: ({ close }) => (
-              <div className="flex justify-between items-center p-2">
-                <button className="text-white" onClick={close}>
-                  Close
-                </button>
-                <button
-                  className="text-white"
-                  onClick={() =>
-                    window.open(images[index].full, '_blank')
-                  }
-                >
-                  View Full Size
-                </button>
-              </div>
-            ),
-          }}
-        />
-      )}
+      {/* React Dialog for showing the full image */}
+      <dialog ref={dialogRef} className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50">
+        {selectedImage && (
+          <div className="relative p-4 bg-white rounded-lg">
+            <img
+              src={selectedImage.full}  // Full-size image
+              alt={selectedImage.alt}
+              className="w-full h-full max-w-[100vw] max-h-[100vh] object-contain"  // Fit image to screen while keeping aspect ratio
+            />
+            <div className="flex justify-center mt-4">
+              <button
+                className="text-white bg-gray-800 px-4 py-2 rounded-lg mr-2"
+                onClick={handleClose}  // Close modal on click
+              >
+                Close
+              </button>
+              <button
+                className="text-white bg-gray-800 px-4 py-2 rounded-lg"
+                onClick={() =>
+                  window.open(selectedImage.full, '_blank')  // Open full-size image in a new tab
+                }
+              >
+                View Full Size
+              </button>
+            </div>
+          </div>
+        )}
+      </dialog>
     </div>
   );
 };
