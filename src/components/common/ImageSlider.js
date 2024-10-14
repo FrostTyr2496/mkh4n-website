@@ -67,10 +67,10 @@ const ImageSlider = ({ images, initialSlide = 0, onClose }) => {
                                     alt={img.alt}
                                     className="max-w-full max-h-[85vh] object-contain"
                                 />
-                                {/* Caption inside the white frame */}
+                                {/* Caption inside the white frame
                                 <div className="bottom-2 text-center font-sans text-xs text-black">
                                     {img.alt}
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </SwiperSlide>
