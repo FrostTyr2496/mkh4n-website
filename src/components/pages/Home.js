@@ -33,12 +33,12 @@ function Home() {
         {/* Subheading with the cheeky line */}
         <p className="text-2xl italic mb-4">Exploring the world through lenses—aerial, terrestrial, or contact 👀</p>
 
-        {/* Subheading with the bio line wrapped in a translucent box */}
+        {/* Subheading with the bio line wrapped in a translucent box
         <div className="bg-black bg-opacity-50 p-6 rounded-lg inline-block">
           <p className="text-xl">
             I’m a software engineering manager with a passion for exploring nature through landscape, astro, and aerial photography. With a deep interest in technology, arts, and ancient/modern wisdom, I seek to bridge the gap between human experience and innovation.
           </p>
-        </div>
+        </div> */}
 
         {/* Buttons */}
         <div className="flex justify-center gap-4 mt-8 mb-8">
